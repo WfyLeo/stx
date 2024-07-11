@@ -16,6 +16,11 @@ public class LoginConstant {
     public static final String ADMIN_CODE = "ROLE_ADMIN";
 
     /**
+     * token的刷新
+     */
+    public static  final  String REFRESH_TOKEN = "REFRESH_TOKEN" ;
+
+    /**
      * 根据用户名查询管理端用户
      */
     public static final String QUERY_ADMIN_SQL = "SELECT `id` ,`username`, `password`, `status` FROM sys_user WHERE username = ? ";
@@ -39,5 +44,14 @@ public class LoginConstant {
             "SELECT sys_privilege.`name` FROM sys_privilege LEFT JOIN sys_role_privilege ON sys_role_privilege.privilege_id = sys_privilege.id LEFT JOIN sys_user_role  ON sys_role_privilege.role_id = sys_user_role.role_id WHERE sys_user_role.user_id = ?";
 
 
+    /**
+     * 根据手机号码/邮箱查询普通用户
+     */
+    public static final String QUERY_MEMBER_SQL =
+            "SELECT `id`,`password`, `status` FROM `user` WHERE mobile = ? or email = ? ";
+
+    public static final String  QUERY_ADMIN_USER_WITH_ID = "SELECT `username` FROM `sys_user` WHERE `id` = ?";
+
+    public static final String  QUERY_MEMBER_USER_WITH_ID = "SELECT `email` FROM `user` WHERE `id` = ?";
 
 }
