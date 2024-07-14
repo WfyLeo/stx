@@ -1,6 +1,6 @@
 package com.ctx.exchange.constant;
 
-public class Constant {
+public class Constants {
     /**
      * UTF-8 字符集
      */
