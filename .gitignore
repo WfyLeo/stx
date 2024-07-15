@@ -23,3 +23,15 @@ config.properties
 # 忽略所有 .properties 文件
 *.properties
 
+# 忽略 .idea 目录下的所有 .xml 文件
+.idea/*.xml
+
+# 忽略 /target 目录下的所有 .xml 文件
+*/target/**/*.xml
+
+# 忽略 /META-INF 目录下的所有 .xml 文件
+*/META-INF/**/*.xml
+
+# 忽略 /archetype-resources 目录下的所有 .xml 文件
+*/archetype-resources/**/*.xml
+
