@@ -1,22 +1,21 @@
 # 忽略编译输出文件夹
 /out/
 
-# 忽略所有的 .class 文件
+# 忽略所有 .class 文件
 *.class
 
 # 忽略 IntelliJ IDEA 的工作空间文件
 .idea/
 *.iml
 
-# 忽略指定的配置文件
-config.properties
-
-# 忽略某个特定文件夹
-path/to/your/folder/
-
-# 忽略特定文件
-path/to/your/file.txt
-
 # 忽略 Maven 目标文件夹
 /target/
 
+# 忽略 Gradle 构建文件夹
+/build/
+
+# 忽略日志文件
+*.log
+
+# 忽略配置文件
+config.properties
