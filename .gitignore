@@ -16,3 +16,7 @@ path/to/your/folder/
 
 # 忽略特定文件
 path/to/your/file.txt
+
+# 忽略 Maven 目标文件夹
+/target/
+
