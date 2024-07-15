@@ -19,3 +19,7 @@
 
 # 忽略配置文件
 config.properties
+
+# 忽略所有 .properties 文件
+*.properties
+
