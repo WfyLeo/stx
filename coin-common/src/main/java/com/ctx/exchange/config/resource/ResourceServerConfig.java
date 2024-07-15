@@ -1,6 +1,7 @@
 package com.ctx.exchange.config.resource;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -50,10 +51,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         return tokenStore;
     }
 
-    private JwtAccessTokenConverter jwtAccessTokenConverter() {
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         //读取classPathResource下面的文件
-        ClassPathResource pathResource = new ClassPathResource("coinexchange.pub");
+        ClassPathResource pathResource = new ClassPathResource("coinexchange-pub.txt");
         String publicKey = null;
         try {
             byte[] bytes = FileCopyUtils.copyToByteArray(pathResource.getInputStream());

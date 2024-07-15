@@ -2,8 +2,11 @@ package com.ctx.exchange.aspect;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import com.alibaba.fastjson.JSON;
 import com.ctx.exchange.model.WebLog;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -27,6 +30,7 @@ import java.util.Map;
 @Aspect
 @Component
 @Order(1)
+@Slf4j
 public class WebLogAspect {
 
     /**
@@ -47,14 +51,14 @@ public class WebLogAspect {
     @Around(value = "webLog()")
     public Object WebLogAspect(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = null;
-        WebLog log = new WebLog();
+        WebLog weblog = new WebLog();
         //创建计时器
         long start = System.currentTimeMillis() ;
         // 执行方法的真实调用
         result = joinPoint.proceed(joinPoint.getArgs());
         long end = System.currentTimeMillis() ;
 
-        log.setSpendTime((int)(end - start)/1000);
+        weblog.setSpendTime((int)(end - start)/1000);
 
         //获取请求上下文
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -70,16 +74,17 @@ public class WebLogAspect {
         String className = joinPoint.getTarget().getClass().getName();
         //获取请求的url地址
         String url = request.getRequestURL().toString();
-        log.setUrl(url);
-        log.setUri(request.getRequestURI()); // 设置请求的uri
-        log.setMethod(method.getName());
-        log.setBasePath(StrUtil.removePrefix(url, URLUtil.url(url).getPath()));// http://ip:port/
-        log.setUsername(authentication == null ? "" : authentication.getPrincipal().toString()); //用户的ID
-        log.setIp(request.getRemoteAddr()); //todo 获取ip地址
-        log.setDescription(annotation == null ? "no desc" : annotation.value());
-        log.setMethod(className+"."+method.getName());
-        log.setParameter(getMethodParameter(method,joinPoint.getArgs()));
-        log.setResult(result);
+        weblog.setUrl(url);
+        weblog.setUri(request.getRequestURI()); // 设置请求的uri
+        weblog.setMethod(method.getName());
+        weblog.setBasePath(StrUtil.removeSuffix(url, URLUtil.url(url).getPath()));// http://ip:port/
+        weblog.setUsername(authentication == null ? "" : authentication.getPrincipal().toString()); //用户的ID
+        weblog.setIp(request.getRemoteAddr()); //todo 获取ip地址
+        weblog.setDescription(annotation == null ? "no desc" : annotation.value());
+        weblog.setMethod(className+"."+method.getName());
+        weblog.setParameter(getMethodParameter(method,joinPoint.getArgs()));
+        weblog.setResult(result);
+        log.info(JSON.toJSONString(weblog,true));
         return result;
     }
 

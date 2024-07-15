@@ -26,7 +26,7 @@ public class JacksonConfig {
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
         // 将简单模块注册到 ObjectMapper
         objectMapper.registerModule(simpleModule);
-        objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/shanghai"));
+        objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         // 设置可见性为所有属性，包括私有属性
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);

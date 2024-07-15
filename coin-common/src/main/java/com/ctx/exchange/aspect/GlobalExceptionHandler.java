@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 全局web的异常处理
+ * @ControllerAdvice 和 @ResponseBody 的功能，用于全局处理控制器中的异常、数据绑定和其他 Web 相关的操作。
+ * 些方法可以捕获应用程序中的所有异常，并且返回统一的响应结构
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

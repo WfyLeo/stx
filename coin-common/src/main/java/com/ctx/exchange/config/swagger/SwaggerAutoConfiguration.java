@@ -1,5 +1,6 @@
 package com.ctx.exchange.config.swagger;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -16,9 +17,15 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
+@EnableConfigurationProperties(SwaggerProperties.class)
 public class SwaggerAutoConfiguration {
 
     private SwaggerProperties swaggerProperties;
+
+    public SwaggerAutoConfiguration(SwaggerProperties swaggerProperties) {
+        this.swaggerProperties = swaggerProperties;
+    }
+
 
     @Bean
     public Docket api() {
