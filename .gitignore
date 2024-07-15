@@ -27,7 +27,7 @@ config.properties
 .idea/*.xml
 
 # 忽略 /target 目录下的所有 .xml 文件
-*/target/**/*.xml
+*/target/
 
 # 忽略 /META-INF 目录下的所有 .xml 文件
 */META-INF/**/*.xml
