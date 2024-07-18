@@ -45,25 +45,31 @@ public class SysLoginServiceImpl implements SysLoginService {
 
     @Override
     public LoginResult login(String username, String password) {
-        log.info("用户{}开始登录",username);
-        //获取token，需要远程调用authorization-server服务
-        ResponseEntity<JwtToken> token = oAuth2FeignClient.getToken("password", username, password, "admin_type", basicToken);
-        if(token.getStatusCode() != HttpStatus.OK){
-            throw new ApiException(ApiErrorCode.FAILED);
+        log.info("用户{}开始登录", username);
+        // 1 获取token 需要远程调用authorization-server 该服务
+        ResponseEntity<JwtToken> tokenResponseEntity = oAuth2FeignClient.getToken("password", username, password, "admin_type", basicToken);
+        if(tokenResponseEntity.getStatusCode()!= HttpStatus.OK){
+            throw new ApiException(ApiErrorCode.FAILED) ;
         }
-        JwtToken jwtToken = token.getBody();
-        log.info("远程调用服务器成功，jwtToken is {}",jwtToken);
-        String accessToken = jwtToken.getAccessToken();
-        //解析token
-        Jwt jwt = JwtHelper.decode(accessToken);
-        String jwtClaims = jwt.getClaims();
-        JSONObject jsonObject = JSON.parseObject(jwtClaims);
-        long userId = Long.parseLong(jsonObject.get("user_name").toString());
-        List<SysMenu> sysMenuList = sysMenuService.getMenuByUserId(userId);
-        //获取权限
-        JSONArray authoritiesJsonArray = jsonObject.getJSONArray("authorities");
-        List<SimpleGrantedAuthority> simpleGrantedAuthorities = authoritiesJsonArray.stream().map(authority -> new SimpleGrantedAuthority(authority.toString())).collect(Collectors.toList());
-        redisTemplate.opsForValue().set(accessToken,"",jwtToken.getExpiresIn(), TimeUnit.SECONDS);
-        return new LoginResult(jwtToken.getTokenType() + " " + accessToken,sysMenuList,simpleGrantedAuthorities);
+        JwtToken jwtToken = tokenResponseEntity.getBody();
+        log.info("远程调用授权服务器成功,获取的token为{}", JSON.toJSONString(jwtToken,true));
+        String token = jwtToken.getAccessToken() ;
+
+        // 2 查询我们的菜单数据
+        Jwt jwt = JwtHelper.decode(token);
+        String jwtJsonStr = jwt.getClaims();
+        JSONObject jwtJson = JSON.parseObject(jwtJsonStr);
+        Long userId = Long.valueOf(jwtJson.getString("user_name")) ;
+        List<SysMenu> menus = sysMenuService.getMenuByUserId(userId);
+
+        // 3 权限数据怎么查询 -- 不需要查询的，因为我们的jwt 里面已经包含了
+        JSONArray authoritiesJsonArray = jwtJson.getJSONArray("authorities");
+        List<SimpleGrantedAuthority> authorities = authoritiesJsonArray.stream() // 组装我们的权限数据
+                .map(authorityJson->new SimpleGrantedAuthority(authorityJson.toString()))
+                .collect(Collectors.toList());
+        // 1 将该token 存储在redis 里面，配置我们的网关做jwt验证的操作
+        redisTemplate.opsForValue().set(token,"", jwtToken.getExpiresIn() ,TimeUnit.SECONDS);
+        //2 我们返回给前端的Token 数据，少一个bearer：
+        return new LoginResult(jwtToken.getTokenType()+" "+token, menus, authorities);
     }
 }

@@ -8,8 +8,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
     * 系统菜单
@@ -109,6 +112,32 @@ public class SysMenu implements Serializable {
     @TableField(value = "last_update_time")
     @ApiModelProperty(value="修改时间")
     private Date lastUpdateTime;
+
+    @TableField(exist = false)
+    @ApiModelProperty("该菜单下的所有的权限")
+    private List<SysPrivilege> sysPrivileges ;
+
+    @TableField(exist = false)
+    @ApiModelProperty("该菜单的子菜单")
+    private List<SysMenu>  childs ;
+
+    @TableField(exist = false)
+    @ApiModelProperty("该菜单的唯一Key值")
+    private  String menuKey ;
+
+
+
+    /**
+     * 获取菜单的唯一Key凭证
+     * @return
+     */
+    public String getMenuKey() {
+        if (!StringUtils.isEmpty(parentKey)) {
+            return parentKey+"."+id;
+        }else {
+            return id.toString();
+        }
+    }
 
     private static final long serialVersionUID = 1L;
 }

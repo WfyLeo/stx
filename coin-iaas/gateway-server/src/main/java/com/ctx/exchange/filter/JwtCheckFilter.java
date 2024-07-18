@@ -9,6 +9,7 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -26,7 +27,7 @@ public class JwtCheckFilter implements GlobalFilter, Ordered {
     private Set<String> noRequieCheckTokenUrl;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -70,7 +71,7 @@ public class JwtCheckFilter implements GlobalFilter, Ordered {
      */
     private String getRequireToken(ServerWebExchange exchange) {
         String token = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        return token == null? null:token.replace("Bearer ","");
+        return token ==null ? null : token.replace("bearer ","") ;
     }
 
     /**
