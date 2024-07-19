@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -113,9 +114,7 @@ public class SysMenu implements Serializable {
     @ApiModelProperty(value="修改时间")
     private Date lastUpdateTime;
 
-    @TableField(exist = false)
-    @ApiModelProperty("该菜单下的所有的权限")
-    private List<SysPrivilege> sysPrivileges ;
+
 
     @TableField(exist = false)
     @ApiModelProperty("该菜单的子菜单")
@@ -125,7 +124,9 @@ public class SysMenu implements Serializable {
     @ApiModelProperty("该菜单的唯一Key值")
     private  String menuKey ;
 
-
+    @TableField(exist = false)
+    @ApiModelProperty("该菜单下的所有的权限")
+    private List<SysPrivilege> privileges = Collections.emptyList();
 
     /**
      * 获取菜单的唯一Key凭证

@@ -96,5 +96,9 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value="修改时间")
     private Date lastUpdateTime;
 
+    @ApiModelProperty(value = "角色的IDS")
+    @TableField(exist = false)
+    private String role_strings ;
+
     private static final long serialVersionUID = 1L;
 }

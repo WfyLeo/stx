@@ -40,10 +40,10 @@ spring:
         #        ds2.file:
         #          file: classpath:api-group.json
         #          ruleType: gw_api_group
-#        ds2.nacos:
-#          serverAddr: nacos-server:8848
-#          dataId: api-group
-#          ruleType: gw_api_group # 我们演示了sentinel-dashboard 的规则的定义，而且规则定义好了后，我们的网关能立马的感知到（生效）（nacos无法感知），但是我们下次重启，会丢失规则。--》nacos
+        ds2.nacos:
+          serverAddr: nacos-server:8848
+          dataId: api-group
+          ruleType: gw_api_group # 我们演示了sentinel-dashboard 的规则的定义，而且规则定义好了后，我们的网关能立马的感知到（生效）（nacos无法感知），但是我们下次重启，会丢失规则。--》nacos
 
   redis:
     host: redis-server

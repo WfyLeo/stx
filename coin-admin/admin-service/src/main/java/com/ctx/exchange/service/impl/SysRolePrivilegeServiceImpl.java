@@ -68,14 +68,14 @@ public class SysRolePrivilegeServiceImpl extends ServiceImpl<SysRolePrivilegeMap
      * @param roleId   当前查询的角色的ID
      * @return
      */
-    private List<SysMenu>  getChildMenus(Long parentId, Long roleId, List<SysMenu> sources) {
+    private List<SysMenu> getChildMenus(Long parentId, Long roleId, List<SysMenu> sources) {
         List<SysMenu> childs = new ArrayList<>();
         for (SysMenu source : sources) {
             if (source.getParentId() == parentId) { // 找儿子
                 childs.add(source);
                 source.setChilds(getChildMenus(source.getId(), roleId, sources)); // 给该儿子设置儿子
                 List<SysPrivilege> sysPrivileges = sysPrivilegeService.getAllSysPrivilege(source.getId(), roleId);
-                source.setSysPrivileges(sysPrivileges); // 该儿子可能包含权限
+                source.setPrivileges(sysPrivileges); // 该儿子可能包含权限
             }
         }
         return childs;

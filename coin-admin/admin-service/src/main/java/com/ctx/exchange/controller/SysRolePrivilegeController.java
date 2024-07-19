@@ -38,11 +38,12 @@ public class SysRolePrivilegeController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "rolePrivilegesParam" ,value = "rolePrivilegesParam json数")
     })
-    public R grantPrivileges(@RequestBody RolePrivilegesParam rolePrivilegesParam){
+    public R grantPrivileges(@RequestBody  RolePrivilegesParam rolePrivilegesParam){
         boolean isOk = sysRolePrivilegeService.grantPrivileges(rolePrivilegesParam)  ;
         if(isOk){
             return R.ok() ;
         }
         return R.fail("授予失败") ;
     }
+
 }
