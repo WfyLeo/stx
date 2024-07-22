@@ -9,10 +9,11 @@
 *.iml
 
 # 忽略 Maven 目标文件夹
-/target/
+/target/*
+
 
 # 忽略 Gradle 构建文件夹
-/build/
+
 
 # 忽略日志文件
 *.log
