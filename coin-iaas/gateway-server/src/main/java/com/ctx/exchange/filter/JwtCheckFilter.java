@@ -32,7 +32,7 @@ public class JwtCheckFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         //1.获取传递来的url，校验路径是否需要token
-        if(isRequireToken(exchange)){
+         if(isRequireToken(exchange)){
             return chain.filter(exchange);
         }
         //2.根据传递来的url，校验是否有token，并返回

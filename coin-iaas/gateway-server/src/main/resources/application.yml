@@ -19,6 +19,12 @@ spring:
             - Path=/admin/**
           filters:
             - StripPrefix=1
+        - id: member-service_router
+          uri: lb://member-service   # 转发到那个目的地
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
         - id: test_router
           uri: http://www.aliyun.com
           predicates:
