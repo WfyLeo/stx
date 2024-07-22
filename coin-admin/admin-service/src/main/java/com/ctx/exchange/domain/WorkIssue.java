@@ -1,9 +1,6 @@
 package com.ctx.exchange.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -71,16 +68,24 @@ public class WorkIssue implements Serializable {
     /**
      * 修改时间
      */
-    @TableField(value = "last_update_time")
+    @TableField(value = "last_update_time",fill = FieldFill.UPDATE)
     @ApiModelProperty(value="修改时间")
     private Date lastUpdateTime;
 
     /**
      * 创建时间
      */
-    @TableField(value = "created")
+    @TableField(value = "created",fill = FieldFill.INSERT)
     @ApiModelProperty(value="创建时间")
     private Date created;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "创建工单的用户名称")
+    public String username ="测试用户" ;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "创建工单的用户真实名称")
+    private String realName= "测试用户" ;
 
     private static final long serialVersionUID = 1L;
 }

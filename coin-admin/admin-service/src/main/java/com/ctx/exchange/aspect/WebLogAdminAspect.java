@@ -9,6 +9,7 @@ import com.ctx.exchange.model.WebLog;
 import com.ctx.exchange.service.SysUserLogService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -88,7 +89,7 @@ public class WebLogAdminAspect {
         weblog.setUri(request.getRequestURI()); // 设置请求的uri
         weblog.setMethod(method.getName());
         weblog.setBasePath(StrUtil.removeSuffix(url, URLUtil.url(url).getPath()));// http://ip:port/
-        weblog.setUsername(authentication == null ? "" : authentication.getPrincipal().toString()); //用户的ID
+        weblog.setUsername(authentication == null || authentication.getPrincipal().equals("anonymousUser") ? "" : authentication.getPrincipal().toString()); //用户的ID
         weblog.setIp(request.getRemoteAddr()); //todo 获取ip地址
         weblog.setDescription(annotation == null ? "no desc" : annotation.value());
         weblog.setMethod(className+"."+method.getName());
@@ -101,7 +102,9 @@ public class WebLogAdminAspect {
         sysUserLog.setCreated(new Date());
         sysUserLog.setDescription(weblog.getDescription());
         sysUserLog.setGroup(weblog.getDescription());
-        sysUserLog.setUserId(Long.parseLong(weblog.getUsername()));
+        if(StringUtils.isNotBlank(weblog.getUsername())){
+            sysUserLog.setUserId(Long.parseLong(weblog.getUsername()));
+        }
         sysUserLog.setMethod(weblog.getMethod());
         sysUserLog.setIp(weblog.getIp());
         sysUserLog.setRemark(weblog.getDescription());
