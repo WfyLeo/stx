@@ -1,7 +1,7 @@
 package com.ctx.exchange.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ctx.exchange.AdminBank;
+import com.ctx.exchange.domain.AdminBank;
 import com.ctx.exchange.model.R;
 import com.ctx.exchange.service.AdminBankService;
 import io.swagger.annotations.Api;

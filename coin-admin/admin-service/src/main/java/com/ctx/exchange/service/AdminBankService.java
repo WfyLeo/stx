@@ -1,7 +1,7 @@
 package com.ctx.exchange.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ctx.exchange.AdminBank;
+import com.ctx.exchange.domain.AdminBank;
 import com.baomidou.mybatisplus.extension.service.IService;
 public interface AdminBankService extends IService<AdminBank>{
 

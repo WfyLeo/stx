@@ -1,4 +1,4 @@
-package com.ctx.exchange;
+package com.ctx.exchange.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
