@@ -23,7 +23,7 @@ import java.util.Set;
 @Component
 public class JwtCheckFilter implements GlobalFilter, Ordered {
 
-    @Value("${no.require.urls:/admin/login}")
+    @Value("${no.require.urls:/admin/login,/user/gt/register,/user/login}")
     private Set<String> noRequieCheckTokenUrl;
 
     @Autowired

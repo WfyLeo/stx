@@ -30,6 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.csrf().disable()// 禁用 CSRF 保护，因为使用了 JWT，不需要 CSRFf
                 .sessionManagement().disable()//禁用基于会话的管理，使用 Token 进行身份验证
                 .authorizeRequests().antMatchers(
+                        "/gt/register",
                         "/login",
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",//用来获取支持的动作
