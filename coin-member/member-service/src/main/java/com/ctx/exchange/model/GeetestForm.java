@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -28,7 +29,7 @@ public class GeetestForm {
     private String geetest_validate ;
     private String uuid ;
 
-    public void check(GeetestLib geetestLib, RedisTemplate<String, Object> redisTemplate) {
+    public void check(GeetestLib geetestLib, RedisTemplate<String,Object> redisTemplate){
         String challenge = this.getGeetest_challenge();
         String validate = this.getGeetest_validate();
         String seccode = this.getGeetest_seccode();

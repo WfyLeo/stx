@@ -6,6 +6,7 @@ import com.ctx.exchange.feign.OAuth2FeignClient;
 import com.ctx.exchange.geetest.GeetestLib;
 import com.ctx.exchange.model.LoginForm;
 import com.ctx.exchange.service.LoginService;
+import com.ctx.exchange.util.RSAUtil;
 import com.ctx.exchange.vo.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+
     @Autowired
     private GeetestLib geetestLib;
 
@@ -45,20 +47,22 @@ public class LoginServiceImpl implements LoginService {
      * @return 登录的结果
      */
     @Override
-    public LoginUser login(LoginForm loginForm) {
+    public LoginUser login(LoginForm loginForm) throws Exception {
         log.info("用户{}开始登录", loginForm.getUsername());
         checkFormData(loginForm);
         LoginUser loginUser = null;
+        //String password = RSAUtil.decrypt(loginForm.getPassword());
         // 登录就是使用用户名和密码换一个token 而已--->远程调用->authorization-server
-        ResponseEntity<JwtToken> tokenResponseEntity = oAuth2FeignClient.getToken("password", loginForm.getUsername(), loginForm.getPassword(), "member_type", basicToken);
+        ResponseEntity<JwtToken> tokenResponseEntity = oAuth2FeignClient.getToken("password", loginForm.getUsername(), "123456", "member_type", basicToken);
         if (tokenResponseEntity.getStatusCode() == HttpStatus.OK) {
             JwtToken jwtToken = tokenResponseEntity.getBody();
             log.info("远程调用成功,结果为", JSON.toJSONString(jwtToken, true));
             // token 必须包含bearer
-            loginUser = new LoginUser(loginForm.getUsername(), jwtToken.getExpiresIn(), jwtToken.getTokenType() + " " + jwtToken.getAccessToken(), jwtToken.getRefreshToken());
+            loginUser = new LoginUser(loginForm.getUsername(), jwtToken.getExpiresIn(), jwtToken.getTokenType() + " " + jwtToken.getAccessToken(), jwtToken.getTokenType() + " " +jwtToken.getRefreshToken());
             // 使用网关解决登出的问题:
             // token 是直接存储的
             strRedisTemplate.opsForValue().set(jwtToken.getAccessToken(), "", jwtToken.getExpiresIn(), TimeUnit.SECONDS);
+            strRedisTemplate.opsForValue().set(jwtToken.getRefreshToken(), "", jwtToken.getExpiresIn(), TimeUnit.SECONDS);
         }
         return loginUser;
     }

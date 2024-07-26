@@ -3,6 +3,8 @@ package com.ctx.exchange.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ctx.exchange.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ctx.exchange.model.UserAuthForm;
+
 public interface UserService extends IService<User>{
 
 
@@ -46,4 +48,15 @@ public interface UserService extends IService<User>{
      *
      */
     void updateUserAuthStatus(Long id, Byte authStatus, Long authCode,String remark);
+
+
+    /**
+     * 用户的实名认证
+     * @param id 用户的Id
+     * @param userAuthForm
+     * 认证的表单数据
+     * @return
+     *  认证的结果
+     */
+    boolean identifyVerify(Long id, UserAuthForm userAuthForm);
 }

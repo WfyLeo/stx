@@ -6,6 +6,7 @@ import com.ctx.exchange.domain.User;
 import com.ctx.exchange.domain.UserAuthAuditRecord;
 import com.ctx.exchange.domain.UserAuthInfo;
 import com.ctx.exchange.model.R;
+import com.ctx.exchange.model.UserAuthForm;
 import com.ctx.exchange.service.UserAuthAuditRecordService;
 import com.ctx.exchange.service.UserAuthInfoService;
 import com.ctx.exchange.service.UserService;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -181,5 +183,30 @@ public class UserController {
     public R<Page<User>> getDirectInvites(@ApiIgnore Page<User> page ,Long userId){
         Page<User> userPage = userService.findDirectInvitePage(page ,userId)  ;
         return R.ok(userPage) ;
+    }
+
+    @GetMapping("/current/info")
+    @ApiOperation(value = "获取当前登录用户的详情")
+    public R<User> currentUserInfo(){
+        // 获取用户的Id
+        String idStr = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User user = userService.getById(Long.valueOf(idStr));
+        user.setPassword("****");
+        user.setPaypassword("*****");
+        return R.ok(user) ;
+    }
+
+    @PostMapping("/authAccount")
+    @ApiOperation(value = "用户的实名认证")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "" ,value = "")
+    })
+    public R identifyCheck(@RequestBody UserAuthForm userAuthForm){
+        String idStr = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        boolean isOk = userService.identifyVerify(Long.valueOf(idStr),userAuthForm) ;
+        if(isOk){
+            return R.ok() ;
+        }
+        return R.fail("认证失败") ;
     }
 }

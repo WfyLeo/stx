@@ -12,5 +12,5 @@ public interface LoginService {
      * @return
      * 登录的结果
      */
-    LoginUser login(LoginForm loginForm);
+    LoginUser login(LoginForm loginForm) throws Exception;
 }

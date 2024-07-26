@@ -1,7 +1,10 @@
 package com.ctx.exchange.aspect;
 
+import com.baomidou.mybatisplus.extension.api.IErrorCode;
 import com.baomidou.mybatisplus.extension.exceptions.ApiException;
 import com.ctx.exchange.model.R;
+import feign.FeignException;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -17,51 +20,49 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * 内部Api 通用的异常处理
-     * @param e
-     * @return
-     */
     @ExceptionHandler(value = ApiException.class)
-    public R handler(ApiException e ){
-        if (e.getErrorCode() != null) {
-            return R.fail(e.getErrorCode());
+    public R handlerApiException(ApiException exception) {
+        IErrorCode errorCode = exception.getErrorCode();
+        if (errorCode != null) {
+            return R.fail(errorCode);
         }
-        return R.fail(e.getMessage());
+        return R.fail(exception.getMessage());
     }
 
-    /**
-     * 方法参数校验失败的异常
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public R handlerValidException(MethodArgumentNotValidException e){
-        BindingResult result = e.getBindingResult();
-        if(result.hasErrors()){
-            FieldError error = result.getFieldError();
-            if(error != null){
-                return R.fail(error.getField() + " " + error.getDefaultMessage());
-            }
-        }
-        return R.fail(e.getMessage());
-    }
-
-    /**
-     *
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(value = BindException.class)
-    public R handleValidException(BindException e) {
-        BindingResult bindingResult = e.getBindingResult();
-        String message = null;
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public R handlerMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        BindingResult bindingResult = exception.getBindingResult();
         if (bindingResult.hasErrors()) {
             FieldError fieldError = bindingResult.getFieldError();
             if (fieldError != null) {
-                message = fieldError.getField() + fieldError.getDefaultMessage();
+                return R.fail(fieldError.getField() + fieldError.getDefaultMessage());
             }
         }
-        return R.fail(message);
+        return R.fail(exception.getMessage());
     }
+
+    @ExceptionHandler(BindException.class)
+    public R handlerBindException(BindException bindException) {
+        BindingResult bindingResult = bindException.getBindingResult();
+        if (bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+            if (fieldError != null) {
+                return R.fail(fieldError.getField() + fieldError.getDefaultMessage());
+            }
+        }
+        return R.fail(bindException.getMessage());
+    }
+
+    /**
+     * 4 捕获 Feign 异常并自定义返回消息
+     */
+/*    @ExceptionHandler(FeignException.class)
+    public R handleFeignException(FeignException exception) {
+        // 判断是否是BadRequest（400）错误
+        if (exception.status() == HttpStatus.BAD_REQUEST.value()) {
+            return R.fail("用户名或密码错误");
+        }
+        // 对其他类型的FeignException进行处理
+        return R.fail("服务调用异常: " + exception.getMessage());
+    }*/
 }
