@@ -1,6 +1,7 @@
 package com.ctx.exchange.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ctx.exchange.config.OAuthClient;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ import java.util.Set;
 @Component
 public class JwtCheckFilter implements GlobalFilter, Ordered {
 
-    @Value("${no.require.urls:/admin/login,/user/gt/register,/user/login}")
+    @Value("${no.require.urls:/admin/login,/user/gt/register,/user/login,/user/users/register,/user/sms/sendTo}")
     private Set<String> noRequieCheckTokenUrl;
 
     @Autowired
@@ -42,10 +43,29 @@ public class JwtCheckFilter implements GlobalFilter, Ordered {
         }
         //3.根据token，在redis中查看是否有，是否过期
         Boolean hasKey = redisTemplate.hasKey(token);
-        if(null != hasKey && hasKey){
+        if(!hasKey){
+            String newAccessToken = getNewAccessToken(token);
+            if (StringUtils.isNotEmpty(newAccessToken)) {
+                exchange = exchange.mutate().request(r -> r.headers(headers -> {
+                    headers.set(HttpHeaders.AUTHORIZATION, "bearer " + newAccessToken);
+                })).build();
+                return chain.filter(exchange);
+            }
+            Boolean hasAaccessKey = redisTemplate.hasKey(newAccessToken);
+            if(null != hasAaccessKey && hasAaccessKey){
+                return chain.filter(exchange);
+            }
+        }else{
             return chain.filter(exchange);
         }
         return buildeNoAuthorizationResult(exchange);
+    }
+
+
+    // Get new access token using refresh token
+    private String getNewAccessToken(String refreshToken) {
+        OAuthClient client = new OAuthClient();
+        return client.getAccessTokenByRefreshToken(refreshToken);
     }
 
     /**

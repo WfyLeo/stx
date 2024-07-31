@@ -62,7 +62,7 @@ public class LoginServiceImpl implements LoginService {
             // 使用网关解决登出的问题:
             // token 是直接存储的
             strRedisTemplate.opsForValue().set(jwtToken.getAccessToken(), "", jwtToken.getExpiresIn(), TimeUnit.SECONDS);
-            strRedisTemplate.opsForValue().set(jwtToken.getRefreshToken(), "", jwtToken.getExpiresIn(), TimeUnit.SECONDS);
+           // strRedisTemplate.opsForValue().set(jwtToken.getRefreshToken(), "", jwtToken.getExpiresIn(), TimeUnit.SECONDS);
         }
         return loginUser;
     }

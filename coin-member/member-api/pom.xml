@@ -7,4 +7,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>member-api</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.ctx</groupId>
+            <artifactId>coin-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -1,8 +1,0 @@
-com\ctx\exchange\constant\LoginConstant.class
-com\ctx\exchange\service\impl\UserServiceDetailServiceImpl.class
-com\ctx\exchange\controller\UserInfoController.class
-com\ctx\exchange\service\impl\UserServiceDetailServiceImpl$1.class
-com\ctx\exchange\config\ResourceServerConfig.class
-com\ctx\exchange\config\WebSecurityConfig.class
-com\ctx\exchange\AuthorizationServerApplication.class
-com\ctx\exchange\config\AuthorizationServerConfig.class

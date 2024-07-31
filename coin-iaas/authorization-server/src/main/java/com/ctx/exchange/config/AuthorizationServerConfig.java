@@ -37,7 +37,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("coin-api")//第三方客户端的名称
                 .secret(passwordEncoder.encode("coin-secret"))//第三方客户端的秘钥
                 //授权方式配置，具体来说是关于授权码模式（authorization_code）、密码模式（password）和刷新令牌（refresh_token）的配置。
-                .authorizedGrantTypes("authorization_code", "password", "refresh_token")
+                .authorizedGrantTypes("password", "refresh_token")
                 .scopes("all")//第三方客户端的收全方位
                 .accessTokenValiditySeconds(3600 * 7 * 24)//token的有效期 7天
                 .refreshTokenValiditySeconds(30 * 24 * 3600)//refresh_token有效期 30天
